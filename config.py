@@ -15,6 +15,7 @@ parser.add_argument("--global_feature_dim",default = 128,help="the size of the g
 
 # add the training configuration
 parser.add_argument("--epoch",default = 100)
-parser.add_argument("--batch",default = 4)
+parser.add_argument("--batch_size",default = 4)
+parser.add_argument("--shuffle",default = True)
 parser.add_argument("--dataset_name",default = "ShapeNet")
 config = parser.parse_args(args = [])
