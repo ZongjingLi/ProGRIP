@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 from primary import *
 from encoder import *
 
+
 class ProGRIP(nn.Module):
     def __init__(self,config):
         super().__init__()
