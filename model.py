@@ -35,7 +35,7 @@ class ProGRIP(nn.Module):
         self.pose_keys = nn.Parameter(torch.randn([1,self.num_pose,key_dim]))
         
         # [Volume Shape Decoder]
-        self.shape_decoder = FCBlock(128,3,self.global_feature_dim + 3,1) # decode the occupancy at point x
+        self.geometric_decoder = FCBlock(128,3,self.global_feature_dim + 3,1) # decode the occupancy at point x
 
     def point_transform(self,x,t,R,s):
         """
@@ -46,16 +46,17 @@ class ProGRIP(nn.Module):
         """
         return
 
-    def forward(self,x):
+    def forward(self,x,mode = "execute"):
         """
         inputs:
-            x: point cloud datasets
+            x: point cloud datasets [B,3,n-points]
         outputs:
             regular program shape
         """
         B,n,_ = x.shape
         Z = self.global_feature_dim;M = self.num_pose;N = self.num_part
         x = x # [B,200,3]
+
         # [Global Encoder]
         global_feature = self.global_encoder(x) # [B,128]
 
@@ -74,10 +75,14 @@ class ProGRIP(nn.Module):
 
         pose_paras = self.pose_para(pose_feature)
         exist_paras = self.exist_para(pose_feature)
-        print(scales.shape,features.shape)
 
-        print(pose_paras.shape,exist_paras.shape)
-        return 0
+        if mode == "execute":
+            hard_exist = (exist_paras + 0.5).int() # hard existence probability 
+            return 1
+        if mode == "train":
+            # calculate the matching loss of an object.
+            return 0
+        return -1
 
 
 if __name__ == "__main__":

@@ -16,6 +16,11 @@ parser.add_argument("--num_pose",default = 5,help = "the number of pose a singe 
 parser.add_argument("--global_feature_dim",default = 256,help="the size of the global geometric encoder feature dim")
 parser.add_argument("--shape_dim",default = 128,help = "shape of the P(x|z)")
 
+# add the loss contruction parameters
+parser.add_argument("--l_s",default = 1.0)
+parser.add_argument("--l_v",default = 0.2)
+parser.add_argument("--l_e",default = 0.8)
+
 # add the training configuration
 parser.add_argument("--epoch",default = 100)
 parser.add_argument("--batch_size",default = 4)
