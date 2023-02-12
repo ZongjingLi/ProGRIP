@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from primary import *
 from encoder import *
 
-
+from cuboid.network import Network_Whole
 
 class ProGRIP(nn.Module):
     def __init__(self,config):
