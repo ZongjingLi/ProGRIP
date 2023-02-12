@@ -100,5 +100,6 @@ class ProGRIP(nn.Module):
 if __name__ == "__main__":
     from config import *
     net = ProGRIP(config)
-    inputs = torch.randn([2,3,200])
+    inputs = torch.randn([2,200,3])
     outputs = net(inputs)
+    print(outputs)

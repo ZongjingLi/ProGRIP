@@ -4,7 +4,7 @@ import numpy as np
 import torch.nn as nn
 import random
 import colorsys
-from plyfile import (PlyData, PlyElement)
+#from plyfile import (PlyData, PlyElement)
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
