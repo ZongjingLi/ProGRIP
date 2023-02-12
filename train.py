@@ -13,15 +13,19 @@ def train(model,config):
     for epoch in range(1,config.epoch + 1):
         epoch_loss = 0
         for sample in tqdm(dataloader):
+            optimizer.zero_grad()
             sample
             # the input size should be a regular point cloud dataset. [BxNx3]
 
             # return size of the model should be... a volumetric render
-            total_loss = 0.1
+            total_loss = 0.1 
+
+            # backward optimize the model parameters
+            total_loss.backward()
+            optimizer.step()
 
             # add the batch total loss to the epoch loss
             epoch_loss += total_loss
-
         
         print("epoch: {} loss: {}".format(epoch,epoch_loss))
 
