@@ -1,0 +1,1 @@
+{"D": {"D_dataset": "shapenet4096", "D_datatype": "airplane"}, "N": {"N_if_low_dim": 0, "N_k": 20, "N_dim_emb": 1024, "N_dim_z": 512, "N_dim_att": 64, "N_num_cubes": 20}}
