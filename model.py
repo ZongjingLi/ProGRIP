@@ -16,3 +16,13 @@ class ProGRIP(nn.Module):
         self.num_pose = config.num_pose
 
         self.global_encoder = PointNetDenseEncoder(input_dim = config.input_dim)
+
+    def forward(self,x):
+        """
+        inputs:
+            x: point cloud datasets
+        outputs:
+            regular program shape
+        """
+
+        return 0
