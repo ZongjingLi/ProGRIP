@@ -16,6 +16,16 @@ class ProGRIP(nn.Module):
         self.num_pose = config.num_pose
 
         self.global_encoder = PointNetDenseEncoder(input_dim = config.input_dim)
+        self.shape_render = 
+
+    def point_transform(self,x,t,R,s):
+        """
+        x: [Nx3] # input volumetric point
+        t: [Nx3] # translation for each point
+        R: [Nx3x3] # SO(3) rotation for each point
+        s: [Nx1] # input scale of each geometric shape
+        """
+        return
 
     def forward(self,x):
         """
