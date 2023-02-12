@@ -15,7 +15,7 @@ class ProGRIP(nn.Module):
         self.num_pose = config.num_pose
 
         self.global_encoder = PointNetDenseEncoder(input_dim = config.input_dim)
-        self.shape_render = 
+        self.shape_render = FCBlock(config.latent_dim,3, 3 + config.latent_dim,1)
 
     def point_transform(self,x,t,R,s):
         """

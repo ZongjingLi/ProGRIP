@@ -7,7 +7,7 @@ class FCLayer(nn.Module):
         self.net = nn.Sequential(
             nn.Linear(in_features, out_features),
             nn.LayerNorm([out_features]),
-            nn.ReLU()
+            nn.Sigmoid()
         )
 
     def forward(self, input):
@@ -81,3 +81,9 @@ class VAE(torch.nn.Module):
         kld_loss   = -0.5 * (1 + log_var - mu.pow(2) - log_var.exp())
 
         return recon, recon_loss, self.beta*kld_loss
+
+if __name__ == "__main__":
+    inputs = torch.randn([7,3])
+    net = FCBlock(128,3,3,1) 
+    outputs = net(inputs)
+    print(outputs)
