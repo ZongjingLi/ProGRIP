@@ -47,3 +47,20 @@ class shapenet4096(data.Dataset):
         
     def __len__(self):
         return self.data_list.shape[0]
+
+if __name__ == "__main__":
+    root = "/Users/melkor/Documents/datasets/ShapeNetNormal4096/"
+    dataset = shapenet4096("train",root,"table",False)
+    print(len(dataset))
+    cur_points, cur_normals, cur_points_num, cur_values, cur_name = dataset[1]
+    print(cur_points.shape)
+
+    fig = plt.figure()
+    ax = fig.add_subplot(projection='3d')
+
+    x = cur_points[:,0]
+    y = cur_points[:,1]
+    z = cur_points[:,2]
+
+    ax.scatter(x,y,z)
+    plt.show()
