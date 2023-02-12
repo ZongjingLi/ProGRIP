@@ -9,6 +9,7 @@ parser = argparse.ArgumentParser()
 # add the input and network configuration
 parser.add_argument("--input_dim",default = 3,help = "currently does not support 2d inputs.")
 parser.add_argument("--latent_dim",default = 128,help = "the latent dim used for MLP")
+parser.add_argument("--key_dim",default = 64,help = "the input dim to decode each shape and pose")
 parser.add_argument("--frustum_size",default = (128,128,128), help = "size of the volumetric render")
 parser.add_argument("--num_part",default = 4,help="number of differen parts being decoded by the geometric encoder.")
 parser.add_argument("--num_pose",default = 4,help = "the number of pose a singe part decoder can be.")

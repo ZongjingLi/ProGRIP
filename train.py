@@ -17,6 +17,10 @@ def train(model,config):
             # the input size should be a regular point cloud dataset. [BxNx3]
 
             # return size of the model should be... a volumetric render
+            total_loss = 0.1
+
+            # add the batch total loss to the epoch loss
+            epoch_loss += total_loss
 
         
         print("epoch: {} loss: {}".format(epoch,epoch_loss))
