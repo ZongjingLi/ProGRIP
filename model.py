@@ -37,6 +37,9 @@ class ProGRIP(nn.Module):
         # [Volume Shape Decoder]
         self.geometric_decoder = FCBlock(128,3,self.global_feature_dim + 3,1) # decode the occupancy at point x
 
+        # [Supervision Box Decoder] (use pretrain model)
+        self.supervision_box_decoder = None
+
     def point_transform(self,x,t,R,s):
         """
         x: [Nx3] # input volumetric point
@@ -46,16 +49,16 @@ class ProGRIP(nn.Module):
         """
         return
 
-    def forward(self,x,mode = "execute"):
+    def forward(self,x,mode = "train"):
         """
         inputs:
             x: point cloud datasets [B,3,n-points]
         outputs:
             regular program shape
         """
-        B,n,_ = x.shape
+        x = x.permute([0,2,1]) # [B,3,200]
+        B,_,n = x.shape
         Z = self.global_feature_dim;M = self.num_pose;N = self.num_part
-        x = x # [B,200,3]
 
         # [Global Encoder]
         global_feature = self.global_encoder(x) # [B,128]
@@ -76,11 +79,18 @@ class ProGRIP(nn.Module):
         pose_paras = self.pose_para(pose_feature)
         exist_paras = self.exist_para(pose_feature)
 
+
         if mode == "execute":
             hard_exist = (exist_paras + 0.5).int() # hard existence probability 
             return 1
         if mode == "train":
             # calculate the matching loss of an object.
+
+            # 1.[Calculate the Supervision Box]
+            ground_box = self.supervision_box_decoder
+            
+            # 2.[Find Best Permutation] (Hugarian Match)
+
             return 0
         return -1
 

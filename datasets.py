@@ -26,8 +26,9 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(BASE_DIR)
 
 class shapenet4096(data.Dataset):
-    def __init__(self, phase, data_root, data_type, if_4096):
+    def __init__(self, phase, data_type, if_4096):
         super().__init__()
+        data_root = "/Users/melkor/Documents/datasets/ShapeNetNormal4096/"
         self.folder = data_type + '/'
         if phase == 'train':
             self.data_list_file = data_root + data_type + '_train.npy'
@@ -43,16 +44,21 @@ class shapenet4096(data.Dataset):
         cur_normals = cur_data[:,3:]
         cur_points_num = 4096
         cur_values = -1
-        return cur_points, cur_normals, cur_points_num, cur_values, cur_name
+        return {"point_cloud":cur_points,
+                "point_normal": cur_normals,
+                "point_num": cur_points_num,
+                "cur_values": cur_values, 
+                "cur_names":cur_name}
         
     def __len__(self):
         return self.data_list.shape[0]
 
 if __name__ == "__main__":
-    root = "/Users/melkor/Documents/datasets/ShapeNetNormal4096/"
-    dataset = shapenet4096("train",root,"table",False)
+
+    dataset = shapenet4096("train","table",False)
     print(len(dataset))
-    cur_points, cur_normals, cur_points_num, cur_values, cur_name = dataset[1]
+    sample = dataset[1]
+    cur_points = sample["point_cloud"]
     print(cur_points.shape)
 
     fig = plt.figure()

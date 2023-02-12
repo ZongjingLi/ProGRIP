@@ -6,7 +6,7 @@ from tqdm import tqdm
 def train(model,config):
     print("Start the ProGRIP training on the {}.".format(config.dataset_name))
     if config.dataset_name == "ShapeNet":
-        dataset = ShapeNetDataset()
+        dataset = dataset = shapenet4096("train",config.category,False)
     dataloader = DataLoader(dataset,batch_size = config.batch_size,shuffle = config.shuffle)
 
     optimizer = torch.optim.Adam(model.parameters(), lr = config.lr)
@@ -14,14 +14,17 @@ def train(model,config):
         epoch_loss = 0
         for sample in tqdm(dataloader):
             optimizer.zero_grad()
-            sample
+            
+            point_cloud = sample["point_cloud"]
+            outputs = model(point_cloud)
+
             # the input size should be a regular point cloud dataset. [BxNx3]
 
             # return size of the model should be... a volumetric render
             total_loss = 0.1 
 
             # backward optimize the model parameters
-            total_loss.backward()
+            #total_loss.backward()
             optimizer.step()
 
             # add the batch total loss to the epoch loss
