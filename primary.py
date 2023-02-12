@@ -40,6 +40,44 @@ class FCBlock(nn.Module):
     def forward(self, input):
         return self.net(input)
 
+class FCTLayer(nn.Module):
+    def __init__(self, in_features, out_features):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(in_features, out_features),
+            nn.LayerNorm([out_features]),
+            nn.Tanh()
+        )
+
+    def forward(self, input):
+        return self.net(input)
+class FCTBlock(nn.Module):
+    def __init__(self,
+                 hidden_ch,
+                 num_hidden_layers,
+                 in_features,
+                 out_features,
+                 outermost_linear=False):
+        super().__init__()
+
+        self.net = []
+        self.net.append(FCLayer(in_features=in_features, out_features=hidden_ch))
+
+        for i in range(num_hidden_layers):
+            self.net.append(FCLayer(in_features=hidden_ch, out_features=hidden_ch))
+
+        if outermost_linear:
+            self.net.append(nn.Linear(in_features=hidden_ch, out_features=out_features))
+        else:
+            self.net.append(FCTLayer(in_features=hidden_ch, out_features=out_features))
+
+        self.net = nn.Sequential(*self.net)
+
+    def __getitem__(self,item):
+        return self.net[item]
+
+    def forward(self, input):
+        return self.net(input)
 
 class VAE(torch.nn.Module):
 
@@ -85,5 +123,7 @@ class VAE(torch.nn.Module):
 if __name__ == "__main__":
     inputs = torch.randn([7,3])
     net = FCBlock(128,3,3,1) 
+    net2 = FCTBlock(128,3,3,1)
     outputs = net(inputs)
-    print(outputs)
+    outputs2 = net2(inputs)
+    print(outputs,outputs2)
