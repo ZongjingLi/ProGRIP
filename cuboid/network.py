@@ -4,6 +4,10 @@ import torch.nn.init as init
 import torch.nn.functional as F
 from .utils_pytorch import quat2mat
 
+device = "cuda:0" if torch.cuda.is_available() else "cpu"
+
+
+
 ##########################################################################################################################
 class Feature_extract(nn.Module):
     def __init__(self, emb_dims, z_dims, k, num_cuboid, low_dim_idx):
@@ -13,7 +17,7 @@ class Feature_extract(nn.Module):
         self.k = k
         self.num_cuboid = num_cuboid
         self.low_dim_idx = low_dim_idx
-        self.cuboid_vector = torch.eye(self.num_cuboid).float().cuda().detach()
+        self.cuboid_vector = torch.eye(self.num_cuboid).float().to(device).detach()
         self.bn1_1 = nn.BatchNorm2d(64)
         self.bn1_2 = nn.BatchNorm2d(64)
         self.bn2_1 = nn.BatchNorm2d(64)
@@ -61,7 +65,7 @@ class Feature_extract(nn.Module):
                 idx = self.knn(x, k=k)   
             else:
                 idx = self.knn(x[:, 6:], k=k)
-        device = torch.device('cuda')
+        device = "cuda:0" if torch.cuda.is_available() else "cpu"
         idx_base = torch.arange(0, batch_size, device=device).view(-1, 1, 1)*num_points
         idx = idx + idx_base
         idx = idx.view(-1)
@@ -191,9 +195,9 @@ class Network_Whole(nn.Module):
         self.z_dims = hypara['N']['N_dim_z']
         self.attention_dim = hypara['N']['N_dim_att']
 
-        self.cube_vert = torch.FloatTensor([[-1,-1,-1],[-1,-1,1],[-1,1,-1],[-1,1,1],[1,-1,-1],[1,-1,1],[1,1,-1],[1,1,1]]).cuda().detach()
+        self.cube_vert = torch.FloatTensor([[-1,-1,-1],[-1,-1,1],[-1,1,-1],[-1,1,1],[1,-1,-1],[1,-1,1],[1,1,-1],[1,1,1]]).to(device).detach()
         self.cube_face = torch.FloatTensor([[0,2,3],[0,3,1],[0,1,2],[1,3,2],[4,6,7],[4,7,5],[4,5,6],[5,7,6],[0,4,5],[0,5,1],[0,1,4],[1,5,4],\
-                                            [2,6,7],[2,7,3],[2,3,6],[3,7,6],[0,4,6],[0,6,2],[0,2,4],[2,6,4],[1,5,7],[1,7,3],[1,3,5],[3,7,5]]).cuda().detach()
+                                            [2,6,7],[2,7,3],[2,3,6],[3,7,6],[0,4,6],[0,6,2],[0,2,4],[2,6,4],[1,5,7],[1,7,3],[1,3,5],[3,7,5]]).to(device).detach()
 
         self.Feature_extract = Feature_extract(emb_dims = self.emb_dims,z_dims = self.z_dims, k = self.k , num_cuboid = self.num_cuboid, low_dim_idx = self.low_dim_idx)
         self.Para_pred = Para_pred()

@@ -3,7 +3,7 @@ from model import *
 
 from tqdm import tqdm
 
-def train(model,config):
+def train_match(model,config):
     print("Start the ProGRIP training on the {}.".format(config.dataset_name))
     if config.dataset_name == "ShapeNet":
         dataset = dataset = shapenet4096("train",config.category,False)
@@ -16,7 +16,7 @@ def train(model,config):
             optimizer.zero_grad()
             
             point_cloud = sample["point_cloud"]
-            outputs = model(point_cloud)
+            outputs = model(point_cloud,"train_match")
 
             # the input size should be a regular point cloud dataset. [BxNx3]
 
@@ -35,4 +35,4 @@ def train(model,config):
 if __name__ == "__main__":
     from config import *
     model = ProGRIP(config)
-    train(model,config)
+    train_match(model,config)

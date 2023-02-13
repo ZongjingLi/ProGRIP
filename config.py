@@ -6,6 +6,8 @@ import argparse
 
 parser = argparse.ArgumentParser()
 
+parser.add_argument("--device",default = device)
+
 # add the input and network configuration
 parser.add_argument("--input_dim",default = 3,help = "currently does not support 2d inputs.")
 parser.add_argument("--latent_dim",default = 128,help = "the latent dim used for MLP")
@@ -15,6 +17,10 @@ parser.add_argument("--num_part",default = 4,help="number of differen parts bein
 parser.add_argument("--num_pose",default = 5,help = "the number of pose a singe part decoder can be.")
 parser.add_argument("--global_feature_dim",default = 256,help="the size of the global geometric encoder feature dim")
 parser.add_argument("--shape_dim",default = 128,help = "shape of the P(x|z)")
+
+# add the cuboid abstraction model for supervision
+state_root = "/Users/melkor/Documents/GitHub/ProGRIP/cuboid/PretrainModels/{}"
+parser.add_argument("--state_root",default = state_root)
 
 # add the loss contruction parameters
 parser.add_argument("--l_s",default = 1.0)
