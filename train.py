@@ -21,10 +21,10 @@ def train_match(model,config):
             # the input size should be a regular point cloud dataset. [BxNx3]
 
             # return size of the model should be... a volumetric render
-            total_loss = 0.1 
+            total_loss = outputs["match_loss"]
 
             # backward optimize the model parameters
-            #total_loss.backward()
+            total_loss.backward()
             optimizer.step()
 
             # add the batch total loss to the epoch loss

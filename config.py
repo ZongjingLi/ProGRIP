@@ -29,7 +29,7 @@ parser.add_argument("--l_e",default = 0.8)
 
 # add the training configuration
 parser.add_argument("--epoch",default = 100)
-parser.add_argument("--batch_size",default = 4)
+parser.add_argument("--batch_size",default =  2)
 parser.add_argument("--shuffle",default = True)
 parser.add_argument("--lr",default = 2e-4)
 parser.add_argument("--dataset_name",default = "ShapeNet")

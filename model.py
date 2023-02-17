@@ -10,6 +10,8 @@ from encoder import *
 
 from cuboid.network import Network_Whole
 
+from utils import *
+
 import json
 from itertools import permutations
 
@@ -50,6 +52,7 @@ class ProGRIP(nn.Module):
         with open(hyppara_path) as f:hyppara = json.load(f)
         self.supervision_box_decoder = Network_Whole(hyppara)
         self.supervision_box_decoder.load_state_dict(torch.load(state_path,map_location = config.device))
+        self.config = config
 
     def point_transform(self,x,t,R,s):
         """
@@ -96,6 +99,7 @@ class ProGRIP(nn.Module):
             hard_exist = (exist_paras + 0.5).int() # hard existence probability 
             return 1
         if mode == "train_match":
+            config = self.config
             # calculate the matching loss of an object.
 
             # 1.[Calculate the Supervision Box]
@@ -106,24 +110,37 @@ class ProGRIP(nn.Module):
             gt_exist = ground_box["exist"]
             # above section calculates the pseudo ground truth supervision
             
-
+            """
             print("comparison of gt and scale:")
             print(gt_scale.shape,scales.shape)
             print(gt_rotate.shape,rotate_paras.shape)
             print(gt_shift.shape,trans_paras.shape)
             print(gt_exist.shape,exist_paras.shape)
-            
-
+            """
+            gt_hard_exist = (gt_exist + 0.5).int()
+            pred_hard_exist = (exist_paras + 0.5).int()
             # 2.[Find Best Permutation] (Hugarian Match)
             batch_match_loss = 0
             # by the way, it does not support the batchwise operation
-            for batch in range(B):
+            for b in range(B): # enumerate over all batch
                 batch_loss = 0
+                perms = permutations(range(gt_scale.shape[1]))
                 for perm in perms:
                     perm_match_loss = 0
                     # calculate the matching loss for each possible permutation
-
-                    if (match_loss > perm_match_loss):match_loss = perm_match_loss
+                    for k in range(scales.shape[1]):
+                        if (k < gt_scale.shape[1]):
+                            kp = perm[k]
+                            gt_box_decode = decode_3d_box(gt_scale[b][k],gt_rotate[b][k],gt_shift[b][k])
+                            pred_box_decode = decode_3d_box(scales[b][kp],rotate_paras[b][kp],trans_paras[b][kp])
+ 
+                            box_loss = 1 - box3d_iou(gt_box_decode,pred_box_decode)[0]
+                            vertex_loss = 0
+                            exist_loss = torch.nn.functional.binary_cross_entropy(exist_paras[b][k:k+1],gt_exist[b][k:k+1])
+    
+                            perm_match_loss += box_loss*config.l_s + vertex_loss*config.l_v + exist_loss*config.l_e
+                        else:perm_match_loss = 1.
+                    if (batch_loss > perm_match_loss):batch_loss = perm_match_loss
                 batch_match_loss += batch_loss
             # find the best permutation for the current predicted set.
 

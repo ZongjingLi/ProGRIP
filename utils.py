@@ -89,8 +89,8 @@ def box3d_iou(corners1, corners2):
     rect1 = [(corners1[i,0], corners1[i,2]) for i in range(3,-1,-1)]
     rect2 = [(corners2[i,0], corners2[i,2]) for i in range(3,-1,-1)] 
     
-    area1 = poly_area(np.array(rect1)[:,0], np.array(rect1)[:,1])
-    area2 = poly_area(np.array(rect2)[:,0], np.array(rect2)[:,1])
+    area1 = poly_area(torch.tensor(rect1)[:,0], torch.tensor(rect1)[:,1])
+    area2 = poly_area(torch.tensor(rect2)[:,0], torch.tensor(rect2)[:,1])
    
     inter, inter_area = convex_hull_intersection(rect1, rect2)
     iou_2d = inter_area/(area1+area2-inter_area)
@@ -145,16 +145,20 @@ def decode_3d_box(box_size, rotation_matrix, center):
     Output:
         corners_3d: numpy array of shape (8,3) for 3D box cornders
     '''
+
     R = rotation_matrix
-    l,w,h = box_size
-    x_corners = [l/2,l/2,-l/2,-l/2,l/2,l/2,-l/2,-l/2];
-    y_corners = [h/2,h/2,h/2,h/2,-h/2,-h/2,-h/2,-h/2];
-    z_corners = [w/2,-w/2,-w/2,w/2,w/2,-w/2,-w/2,w/2];
-    corners_3d = np.dot(R, np.vstack([x_corners,y_corners,z_corners]))
+
+    l,w,h = box_size * 2
+    x_corners = torch.tensor([l/2,l/2,-l/2,-l/2,l/2,l/2,-l/2,-l/2]);
+    y_corners = torch.tensor([h/2,h/2,h/2,h/2,-h/2,-h/2,-h/2,-h/2]);
+    z_corners = torch.tensor([w/2,-w/2,-w/2,w/2,w/2,-w/2,-w/2,w/2]);
+    namo = torch.vstack([x_corners,y_corners,z_corners])
+    corners_3d = torch.matmul(R, namo)
     corners_3d[0,:] = corners_3d[0,:] + center[0];
     corners_3d[1,:] = corners_3d[1,:] + center[1];
     corners_3d[2,:] = corners_3d[2,:] + center[2];
-    corners_3d = np.transpose(corners_3d)
+
+    corners_3d = corners_3d.permute([1,0])
     return corners_3d
 
 import torch
