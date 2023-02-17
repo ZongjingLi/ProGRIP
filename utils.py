@@ -129,6 +129,9 @@ def get_3d_box(box_size, heading_angle, center):
     x_corners = [l/2,l/2,-l/2,-l/2,l/2,l/2,-l/2,-l/2];
     y_corners = [h/2,h/2,h/2,h/2,-h/2,-h/2,-h/2,-h/2];
     z_corners = [w/2,-w/2,-w/2,w/2,w/2,-w/2,-w/2,w/2];
+
+    #vert = torch.FloatTensor([[-1,-1,-1],[-1,-1,1],[-1,1,-1],[-1,1,1],[1,-1,-1],[1,-1,1],[1,1,-1],[1,1,1]])
+
     corners_3d = np.dot(R, np.vstack([x_corners,y_corners,z_corners]))
     corners_3d[0,:] = corners_3d[0,:] + center[0];
     corners_3d[1,:] = corners_3d[1,:] + center[1];
@@ -148,7 +151,7 @@ def decode_3d_box(box_size, rotation_matrix, center):
 
     R = rotation_matrix
 
-    l,w,h = box_size * 2
+    l,h,w= box_size * 2
     x_corners = torch.tensor([l/2,l/2,-l/2,-l/2,l/2,l/2,-l/2,-l/2]);
     y_corners = torch.tensor([h/2,h/2,h/2,h/2,-h/2,-h/2,-h/2,-h/2]);
     z_corners = torch.tensor([w/2,-w/2,-w/2,w/2,w/2,-w/2,-w/2,w/2]);
