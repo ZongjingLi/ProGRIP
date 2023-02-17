@@ -11,6 +11,7 @@ from encoder import *
 from cuboid.network import Network_Whole
 
 import json
+from itertools import permutations
 
 class ProGRIP(nn.Module):
     def __init__(self,config):
@@ -105,6 +106,7 @@ class ProGRIP(nn.Module):
             gt_exist = ground_box["exist"]
             # above section calculates the pseudo ground truth supervision
             
+
             print("comparison of gt and scale:")
             print(gt_scale.shape,scales.shape)
             print(gt_rotate.shape,rotate_paras.shape)
@@ -113,9 +115,19 @@ class ProGRIP(nn.Module):
             
 
             # 2.[Find Best Permutation] (Hugarian Match)
-            match_loss = 0
+            batch_match_loss = 0
+            # by the way, it does not support the batchwise operation
+            for batch in range(B):
+                batch_loss = 0
+                for perm in perms:
+                    perm_match_loss = 0
+                    # calculate the matching loss for each possible permutation
 
-            return {"match_loss":match_loss}
+                    if (match_loss > perm_match_loss):match_loss = perm_match_loss
+                batch_match_loss += batch_loss
+            # find the best permutation for the current predicted set.
+
+            return {"match_loss":batch_match_loss}
 
         if mode == "train_execute":
             return 2

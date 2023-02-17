@@ -136,6 +136,27 @@ def get_3d_box(box_size, heading_angle, center):
     corners_3d = np.transpose(corners_3d)
     return corners_3d
 
+def decode_3d_box(box_size, rotation_matrix, center):
+    ''' Calculate 3D bounding box corners from its parameterization.
+    Input:
+        box_size: tuple of (length,wide,height)
+        heading_angle: rad scalar, clockwise from pos x axis
+        center: tuple of (x,y,z)
+    Output:
+        corners_3d: numpy array of shape (8,3) for 3D box cornders
+    '''
+    R = rotation_matrix
+    l,w,h = box_size
+    x_corners = [l/2,l/2,-l/2,-l/2,l/2,l/2,-l/2,-l/2];
+    y_corners = [h/2,h/2,h/2,h/2,-h/2,-h/2,-h/2,-h/2];
+    z_corners = [w/2,-w/2,-w/2,w/2,w/2,-w/2,-w/2,w/2];
+    corners_3d = np.dot(R, np.vstack([x_corners,y_corners,z_corners]))
+    corners_3d[0,:] = corners_3d[0,:] + center[0];
+    corners_3d[1,:] = corners_3d[1,:] + center[1];
+    corners_3d[2,:] = corners_3d[2,:] + center[2];
+    corners_3d = np.transpose(corners_3d)
+    return corners_3d
+
 import torch
 
 if __name__=='__main__':
