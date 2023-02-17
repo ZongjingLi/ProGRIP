@@ -65,9 +65,9 @@ def convex_hull_intersection(p1, p2):
 
 def box3d_vol(corners):
     ''' corners: (8,3) no assumption on axis direction '''
-    a = np.sqrt(np.sum((corners[0,:] - corners[1,:])**2))
-    b = np.sqrt(np.sum((corners[1,:] - corners[2,:])**2))
-    c = np.sqrt(np.sum((corners[0,:] - corners[4,:])**2))
+    a = torch.sqrt(torch.sum((corners[0,:] - corners[1,:])**2))
+    b = torch.sqrt(torch.sum((corners[1,:] - corners[2,:])**2))
+    c = torch.sqrt(torch.sum((corners[0,:] - corners[4,:])**2))
     return a*b*c
 
 def is_clockwise(p):
@@ -136,11 +136,20 @@ def get_3d_box(box_size, heading_angle, center):
     corners_3d = np.transpose(corners_3d)
     return corners_3d
 
-    
+import torch
+
 if __name__=='__main__':
+    """
+    
+    Worth to notice that:
+    THIS DOES NOT SUPPORT BATCH OPERATION
+    
+    """
     print('------------------')
     # get_3d_box(box_size, heading_angle, center)
-    corners_3d_ground  = get_3d_box((1.497255,1.644981, 3.628938), -1.531692, (2.882992 ,1.698800 ,20.785644)) 
-    corners_3d_predict = get_3d_box((1.458242, 1.604773, 3.707947), -1.549553, (2.756923, 1.661275, 20.943280 ))
+    corners_3d_ground  = torch.tensor(get_3d_box((1.497255,1.644981, 3.628938), -1.531692, (2.882992 ,1.698800 ,20.785644)) )
+    corners_3d_predict = torch.tensor(get_3d_box((1.458242, 1.604773, 3.707947), -1.549553, (2.756923, 1.661275, 20.943280 )))
+    print(corners_3d_ground.shape)
+    print(corners_3d_predict.shape)
     (IOU_3d,IOU_2d)=box3d_iou(corners_3d_predict,corners_3d_ground)
     print (IOU_3d,IOU_2d) #3d IoU/ 2d IoU of BEV(bird eye's view)
