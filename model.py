@@ -105,12 +105,12 @@ class ProGRIP(nn.Module):
             gt_exist = ground_box["exist"]
             # above section calculates the pseudo ground truth supervision
             
-            """
+            print("comparison of gt and scale:")
             print(gt_scale.shape,scales.shape)
             print(gt_rotate.shape,rotate_paras.shape)
             print(gt_shift.shape,trans_paras.shape)
             print(gt_exist.shape,exist_paras.shape)
-            """
+            
 
             # 2.[Find Best Permutation] (Hugarian Match)
             match_loss = 0
