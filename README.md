@@ -17,6 +17,8 @@ Shape programs encode shape structures by representing object parts as subroutin
 
 ![](src/teaser.png)
 
+This paper use the ProGRIP model to create a structured representation of a input point cloud. This model consists several components: 1) the point cloud encoder that take the input point cloud and encode the batch to latent vectors. Later, two transformers are applied to predict the 
+
 ## Dependencies
 * Python 3.8.8.
 * CUDA 10.2.
