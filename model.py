@@ -104,44 +104,42 @@ class ProGRIP(nn.Module):
 
             # 1.[Calculate the Supervision Box]
             ground_box = self.supervision_box_decoder(x.permute([0,2,1]))
-            gt_scale = ground_box["scale"]
-            gt_rotate = ground_box["rotate"]
-            gt_shift = ground_box["trans"]
-            gt_exist = ground_box["exist"]
+            gt_scale = ground_box["scale"];gt_rotate = ground_box["rotate"]
+            gt_shift = ground_box["trans"];gt_exist = ground_box["exist"]
             # above section calculates the pseudo ground truth supervision
             
-            """
-            print("comparison of gt and scale:")
-            print(gt_scale.shape,scales.shape)
-            print(gt_rotate.shape,rotate_paras.shape)
-            print(gt_shift.shape,trans_paras.shape)
-            print(gt_exist.shape,exist_paras.shape)
-            """
             gt_hard_exist = (gt_exist + 0.5).int()
             pred_hard_exist = (exist_paras + 0.5).int()
             # 2.[Find Best Permutation] (Hugarian Match)
             batch_match_loss = 0
             # by the way, it does not support the batchwise operation
             for b in range(B): # enumerate over all batch
-                batch_loss = 0
-                perms = permutations(range(gt_scale.shape[1]))
-                for perm in perms:
-                    perm_match_loss = 0
-                    # calculate the matching loss for each possible permutation
-                    for k in range(scales.shape[1]):
-                        if (k < gt_scale.shape[1]):
-                            kp = perm[k]
-                            gt_box_decode = decode_3d_box(gt_scale[b][k],gt_rotate[b][k],gt_shift[b][k])
-                            pred_box_decode = decode_3d_box(scales[b][kp],rotate_paras[b][kp],trans_paras[b][kp])
- 
+                # calculate the batch loss for using the Hungarian
+                n_gt = gt_hard_exist.shape[1]
+                n_pred = pred_hard_exist.shape[1]
+                n_expand = max(n_gt,n_pred);n_contract = min(n_gt,n_pred)
+                # create the cost matrix
+                cost = torch.zeros([n_expand,n_expand])
+                for i in range(n_gt):
+                    for j in range(n_pred):
+                        effective = gt_hard_exist[b][i] and pred_hard_exist[b][j]
+                        gt_box_decode = decode_3d_box(gt_scale[b][i],gt_rotate[b][i],gt_shift[b][i])
+                        pred_box_decode = decode_3d_box(scales[b][j],rotate_paras[b][j],trans_paras[b][j])
+
+                        # box construction loss
+                        if effective:
                             box_loss = 1 - box3d_iou(gt_box_decode,pred_box_decode)[0]
-                            vertex_loss = 0
-                            exist_loss = torch.nn.functional.binary_cross_entropy(exist_paras[b][k:k+1],gt_exist[b][k:k+1])
-    
-                            perm_match_loss += box_loss*config.l_s + vertex_loss*config.l_v + exist_loss*config.l_e
-                        else:perm_match_loss = 1.
-                    if (batch_loss > perm_match_loss):batch_loss = perm_match_loss
-                batch_match_loss += batch_loss
+                        else: box_loss = 0.0                    
+                        # existence loss
+                        exist_loss = torch.nn.functional.binary_cross_entropy(exist_paras[b][j:j+1],gt_exist[b][i:i+1])
+
+
+                        pair_match_loss = config.l_s * box_loss + config.l_v * 0 + config.l_e * exist_loss
+                        cost[i][j] += pair_match_loss
+                try:
+                    row_ind,col_ind = linear_sum_assignment(cost.detach())
+                except:print(cost)
+                batch_match_loss += cost[row_ind,col_ind].sum()
             # find the best permutation for the current predicted set.
 
             return {"match_loss":batch_match_loss}

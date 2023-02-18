@@ -51,7 +51,7 @@ class shapenet4096(data.Dataset):
                 "cur_names":cur_name}
         
     def __len__(self):
-        return self.data_list.shape[0]
+        return 10#self.data_list.shape[0]
 
 if __name__ == "__main__":
 
