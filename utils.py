@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.spatial import ConvexHull
 from numpy import *
+import torch
 
 def polygon_clip(subjectPolygon, clipPolygon):
    """ Clip a polygon with another polygon.
@@ -164,7 +165,15 @@ def decode_3d_box(box_size, rotation_matrix, center):
     corners_3d = corners_3d.permute([1,0])
     return corners_3d
 
-import torch
+
+from scipy.optimize import linear_sum_assignment
+
+cost = np.array(torch.randn(5,5))
+row_ind,col_ind = linear_sum_assignment(cost)
+print("row_ind:",row_ind)
+print("col_ind:",col_ind)
+print("cost:",cost[row_ind,col_ind])
+print("cost_sum",cost[row_ind,col_ind].sum())
 
 if __name__=='__main__':
     """
@@ -181,3 +190,4 @@ if __name__=='__main__':
     print(corners_3d_predict.shape)
     (IOU_3d,IOU_2d)=box3d_iou(corners_3d_predict,corners_3d_ground)
     print (IOU_3d,IOU_2d) #3d IoU/ 2d IoU of BEV(bird eye's view)
+
