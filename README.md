@@ -35,7 +35,9 @@ The training of the ProGRIP model consists of two stages, the first stage is for
 In second stage of training, we have a model that predicts a set of boxes that corresponds to the cuboid abstraction of the input pointcloud. Now the model train the contents in the matched box. ProGRIP use a implicit neural net (MLP) to encode the geometric parts.
 ![](src/occupancy_decoder.png)
 
-## Model Output
+## Results
+Here are some results from the shape net dataset. We visualize the unsupervised parts segmentation results produce by out ProGRIP, which generalizes well across different object categories. Besides, ProGRIP is capable of segmenting fine-grained parts such as engines and tails of aircrafts.
+![](src/results.png)
 
 ## Dependencies
 * Python 3.8.8.
