@@ -21,6 +21,9 @@ This paper use the ProGRIP model to create a structured representation of a inpu
 
 ## Visualized Point Cloud Data
 
+### Encoder
+This model use a point cloud encoder to construct the vector representation of the input point cloud. Specific model is not listed here.
+
 ## Model Output
 
 ## Dependencies
