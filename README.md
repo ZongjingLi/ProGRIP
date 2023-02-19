@@ -32,7 +32,8 @@ The training of the ProGRIP model consists of two stages, the first stage is for
 **matching-loss**
 ![](src/match_loss.png)
 **execution-loss**
-In second stage of training, we have a model that predicts a set of boxes that corresponds to the cuboid abstraction of the input pointcloud. Now the model train the contents in the matched box.
+In second stage of training, we have a model that predicts a set of boxes that corresponds to the cuboid abstraction of the input pointcloud. Now the model train the contents in the matched box. ProGRIP use a implicit neural net (MLP) to encode the geometric parts.
+![](src/occupancy_decoder.png)
 
 ## Model Output
 
