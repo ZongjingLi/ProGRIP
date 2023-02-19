@@ -168,12 +168,12 @@ def decode_3d_box(box_size, rotation_matrix, center):
 
 from scipy.optimize import linear_sum_assignment
 
-cost = np.array(torch.randn(5,6))
+cost = np.array(torch.randn(5,5))
 row_ind,col_ind = linear_sum_assignment(cost)
 print("row_ind:",row_ind)
 print("col_ind:",col_ind)
 print("cost:",cost[row_ind,col_ind])
-print("cost_sum",cost[row_ind,col_ind].sum())
+print("cost_sum",cost[row_ind,col_ind].sum)
 
 if __name__=='__main__':
     """

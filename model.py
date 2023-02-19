@@ -108,6 +108,7 @@ class ProGRIP(nn.Module):
             gt_shift = ground_box["trans"];gt_exist = ground_box["exist"]
             # above section calculates the pseudo ground truth supervision
             
+            gt_exist = torch.sigmoid(gt_exist)
             gt_hard_exist = (gt_exist + 0.5).int()
             pred_hard_exist = (exist_paras + 0.5).int()
             # 2.[Find Best Permutation] (Hugarian Match)
@@ -131,10 +132,11 @@ class ProGRIP(nn.Module):
                             box_loss = 1 - box3d_iou(gt_box_decode,pred_box_decode)[0]
                         else: box_loss = 0.0                    
                         # existence loss
+
                         exist_loss = torch.nn.functional.binary_cross_entropy(exist_paras[b][j:j+1],gt_exist[b][i:i+1])
 
-
-                        pair_match_loss = config.l_s * box_loss + config.l_v * 0 + config.l_e * exist_loss
+                        #print(box_loss,exist_loss)
+                        pair_match_loss = config.l_s * box_loss * 0 + config.l_v * 0 + config.l_e * exist_loss
                         cost[i][j] += pair_match_loss
                 try:
                     row_ind,col_ind = linear_sum_assignment(cost.detach())
