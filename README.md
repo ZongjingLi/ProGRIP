@@ -41,6 +41,10 @@ The occupany function take the render coordinate and a latent vector as the inpu
 ```math
 o_{i,j}(x) = \hat{\delta}_{i,j}\mathcal{P}((R^{-1}_{i,j}(x-t_{i,j}))/s_i|z_i)
 ```
+Note that we binarize $\delta_{i,j}$ to $\hat{\delta_{i,j}}$ in the equation abovem given a query point, we first canonicalize its coordinates to $x'=(R^{-1}_{i,j}(x-t_{i,j}))/s_i$. Then we feed $x'$ to $\mathcal{P}$ together with the shape code $z_i$. Then binarized existence probability $\hat{\delta_{i,j}}$ is finally multiplied to the predicted occupancy, masking out the non-existence primitives. THe eventual output of the program is an object shape as the union of posed parts. The object occupancy function can therefore be written as
+```math
+\mathcal{O}(x) = \max_i \max_j o_{i,j}(x)
+```
 
 ## Results
 Here are some results from the shape net dataset. We qualitatively compare ProGRIP with state-of-art shape decomposition (includeing Shape2Prog, CubeSeg, and BSP-Net) by rendering out their reconstructions. For ProGRIP, we present both plains reconstruction as well as per part colored rendering. The ground truth mesh is shown in the first row. ProGRIP reconstructs shapes more accurately and smoothly. Note that the cylindrical parts on the chair back are reconstucted as different copies of the same shape as 4 chair legs for their geometric similarity. Meanwhile, since there are asymetric table legs in ShapeNet, out method discovers symmetries for left and right legs independently.
