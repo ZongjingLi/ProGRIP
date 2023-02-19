@@ -45,6 +45,7 @@ Note that we binarize $\delta_{i,j}$ to $\hat{\delta_{i,j}}$ in the equation abo
 ```math
 \mathcal{O}(x) = \max_i \max_j o_{i,j}(x)
 ```
+This max operation represents the softversion of union.
 
 ## Results
 Here are some results from the shape net dataset. We qualitatively compare ProGRIP with state-of-art shape decomposition (includeing Shape2Prog, CubeSeg, and BSP-Net) by rendering out their reconstructions. For ProGRIP, we present both plains reconstruction as well as per part colored rendering. The ground truth mesh is shown in the first row. ProGRIP reconstructs shapes more accurately and smoothly. Note that the cylindrical parts on the chair back are reconstucted as different copies of the same shape as 4 chair legs for their geometric similarity. Meanwhile, since there are asymetric table legs in ShapeNet, out method discovers symmetries for left and right legs independently.
