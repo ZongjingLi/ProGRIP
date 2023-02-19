@@ -26,6 +26,9 @@ The ProGRIP model consists a point cloud encoder that transforms the structure o
 ### Encoder
 This model use a point cloud encoder to construct the vector representation of the input point cloud. Specific model is not listed here.
 
+### Decoder
+Unlike the sequential programs in previous works, we introduce *parallelism* into our program, allowing repeatable parts to be executed simutaneously wiht out a specified order. Specifically, our program generator takes as input a point cloud $X\inR^{Px3}$ with $P$ points and interprets is as a ProGRIP using an auto-encoding architeture. A ProGRIP consists of two level hierarchy.
+
 
 ## Training
 The training of the ProGRIP model consists of two stages, the first stage is for matching and the second stage if for the execution of implicit models.
