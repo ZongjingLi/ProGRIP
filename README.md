@@ -37,6 +37,10 @@ The training of the ProGRIP model consists of two stages, the first stage is for
 **execution-loss**
 In second stage of training, we have a model that predicts a set of boxes that corresponds to the cuboid abstraction of the input pointcloud. Now the model train the contents in the matched box. ProGRIP use a implicit neural net (MLP) to encode the geometric parts.
 ![](src/occupancy_decoder.png)
+The occupany function take the render coordinate and a latent vector as the input. The coorindate represents the region to render and is transformed by the parameters determined by the matching box prediction. Then the occupany decoder take the geometric latent as input and output occupany at that point.
+```math
+o_{i,j}(x) = \hat{\delta}_{i,j}\mathfrac{P}((R^{-1}_{i,j}(x-t_{i,j}))/s_i|z_i)
+```
 
 ## Results
 Here are some results from the shape net dataset. We qualitatively compare ProGRIP with state-of-art shape decomposition (includeing Shape2Prog, CubeSeg, and BSP-Net) by rendering out their reconstructions. For ProGRIP, we present both plains reconstruction as well as per part colored rendering. The ground truth mesh is shown in the first row. ProGRIP reconstructs shapes more accurately and smoothly. Note that the cylindrical parts on the chair back are reconstucted as different copies of the same shape as 4 chair legs for their geometric similarity. Meanwhile, since there are asymetric table legs in ShapeNet, out method discovers symmetries for left and right legs independently.
