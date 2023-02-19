@@ -39,7 +39,7 @@ In second stage of training, we have a model that predicts a set of boxes that c
 ![](src/occupancy_decoder.png)
 The occupany function take the render coordinate and a latent vector as the input. The coorindate represents the region to render and is transformed by the parameters determined by the matching box prediction. Then the occupany decoder take the geometric latent as input and output occupany at that point.
 ```math
-o_{i,j}(x) = \hat{\delta}_{i,j}\mathfrac{P}((R^{-1}_{i,j}(x-t_{i,j}))/s_i|z_i)
+o_{i,j}(x) = \hat{\delta}_{i,j}\mathcal{P}((R^{-1}_{i,j}(x-t_{i,j}))/s_i|z_i)
 ```
 
 ## Results
