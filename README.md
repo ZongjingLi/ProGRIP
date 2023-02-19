@@ -19,7 +19,8 @@ Shape programs encode shape structures by representing object parts as subroutin
 
 This paper use the ProGRIP model to create a structured representation of a input point cloud. This model consists several components: 1) the point cloud encoder that take the input point cloud and encode the batch to latent vectors. Later, two transformers are applied to predict the (potentilly) reusable parts to describe the point cloud and the possible poses of these resuable parts. Then, the model use a matching loss to supervise how good the predicted set describe the point cloud. Note that it requries another point cloud model to predict the cuboid abstraction (luciliy this pretrained model is fully unsupervised).
 
-## Visualized Point Cloud Data
+## General Framework
+
 
 ### Encoder
 This model use a point cloud encoder to construct the vector representation of the input point cloud. Specific model is not listed here.
