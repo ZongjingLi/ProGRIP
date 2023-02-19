@@ -21,7 +21,11 @@ This paper use the ProGRIP model to create a structured representation of a inpu
 
 ## General Framework
 ![](src/framework.png)
-The ProGRIP model consists.
+The ProGRIP model consists a point cloud encoder that transforms the structure of the point cloud into a vector representation.
+
+## Training
+The training of the ProGRIP model consists of two stages, the first stage is for matching and the second stage if for the execution of implicit models.
+![](src/match_loss.png)
 
 
 ### Encoder
